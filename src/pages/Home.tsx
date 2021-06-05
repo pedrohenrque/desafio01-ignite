@@ -30,16 +30,29 @@ export function Home() {
   }
 
   function handleMarkTaskAsDone(id: number) {
-    const tasksFilter = tasks.filter((item) => item.id !== id);
-    const markerTask = tasks.filter((item) => item.id === id)[0];
-    markerTask.done = !markerTask.done;
+    setTasks((prevTasks) => {
+      const indexOfTask = prevTasks.findIndex((task) => task.id === id);
 
-    setTasks([...tasksFilter, markerTask]);
+      if (indexOfTask >= 0) {
+        const newTasks = [...prevTasks];
+        newTasks[indexOfTask].done = !newTasks[indexOfTask].done;
+        return newTasks;
+      }
+
+      return prevTasks;
+    });
   }
 
   function handleRemoveTask(id: number) {
-    const tasksFilter = tasks.filter((item) => item.id !== id);
-    setTasks(tasksFilter);
+    setTasks((prevTasks) => {
+      const tasksFilter = tasks.filter((item) => item.id !== id);
+
+      if (tasksFilter.length !== prevTasks.length) {
+        return tasksFilter;
+      }
+
+      return prevTasks;
+    });
   }
 
   return (
